@@ -4,7 +4,11 @@
 
 import type { GameData } from "@mini-ro/shared-types";
 import bundle from "./index.json" with { type: "json" };
+import prtFild01 from "./maps/prt_fild01.json" with { type: "json" };
 
 export const gameData = bundle as unknown as GameData;
+
+export interface FieldMap { width: number; height: number; cells: number[]; }
+export const fieldMap = prtFild01 as FieldMap;
 
 export default gameData;
