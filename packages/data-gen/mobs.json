@@ -1,0 +1,175 @@
+{
+  "1002": {
+    "id": 1002,
+    "name": "Poring",
+    "sprite": "poring",
+    "lv": 1,
+    "hp": 60,
+    "exp": 36,
+    "jexp": 20,
+    "atk": 8,
+    "atkRange": 1,
+    "def": 2,
+    "mdef": 5,
+    "stats": {
+      "str": 6,
+      "agi": 1,
+      "vit": 1,
+      "int": 0,
+      "dex": 6,
+      "luk": 5
+    },
+    "aspd": 1872,
+    "moveSpeed": 400,
+    "viewRange": 0,
+    "drops": [
+      {
+        "item": 909,
+        "rate": 7000
+      },
+      {
+        "item": 1202,
+        "rate": 100
+      },
+      {
+        "item": 938,
+        "rate": 400
+      },
+      {
+        "item": 512,
+        "rate": 1000
+      },
+      {
+        "item": 713,
+        "rate": 1500
+      },
+      {
+        "item": 619,
+        "rate": 20
+      },
+      {
+        "item": 4001,
+        "rate": 1
+      }
+    ],
+    "color": "#FF9EC4"
+  },
+  "1007": {
+    "id": 1007,
+    "name": "Fabre",
+    "sprite": "fabre",
+    "lv": 6,
+    "hp": 72,
+    "exp": 54,
+    "jexp": 41,
+    "atk": 12,
+    "atkRange": 1,
+    "def": 24,
+    "mdef": 0,
+    "stats": {
+      "str": 12,
+      "agi": 5,
+      "vit": 5,
+      "int": 5,
+      "dex": 12,
+      "luk": 5
+    },
+    "aspd": 1672,
+    "moveSpeed": 400,
+    "viewRange": 0,
+    "drops": [
+      {
+        "item": 914,
+        "rate": 6500
+      },
+      {
+        "item": 949,
+        "rate": 500
+      },
+      {
+        "item": 1502,
+        "rate": 80
+      },
+      {
+        "item": 721,
+        "rate": 5
+      },
+      {
+        "item": 511,
+        "rate": 700
+      },
+      {
+        "item": 705,
+        "rate": 1000
+      },
+      {
+        "item": 1501,
+        "rate": 200
+      },
+      {
+        "item": 4002,
+        "rate": 1
+      }
+    ],
+    "color": "#E8D27A"
+  },
+  "1063": {
+    "id": 1063,
+    "name": "Lunatic",
+    "sprite": "lunatic",
+    "lv": 3,
+    "hp": 55,
+    "exp": 36,
+    "jexp": 27,
+    "atk": 11,
+    "atkRange": 1,
+    "def": 18,
+    "mdef": 0,
+    "stats": {
+      "str": 10,
+      "agi": 3,
+      "vit": 3,
+      "int": 0,
+      "dex": 8,
+      "luk": 5
+    },
+    "aspd": 1456,
+    "moveSpeed": 200,
+    "viewRange": 3,
+    "drops": [
+      {
+        "item": 705,
+        "rate": 6500
+      },
+      {
+        "item": 949,
+        "rate": 1000
+      },
+      {
+        "item": 2262,
+        "rate": 4
+      },
+      {
+        "item": 512,
+        "rate": 2000
+      },
+      {
+        "item": 507,
+        "rate": 600
+      },
+      {
+        "item": 515,
+        "rate": 1100
+      },
+      {
+        "item": 622,
+        "rate": 20
+      },
+      {
+        "item": 4006,
+        "rate": 1
+      }
+    ],
+    "color": "#F2B6C6"
+  }
+}

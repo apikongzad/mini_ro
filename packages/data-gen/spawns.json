@@ -1,0 +1,20 @@
+[
+  {
+    "map": "prt_fild01",
+    "mobId": 1063,
+    "count": 12,
+    "respawnMs": 8000
+  },
+  {
+    "map": "prt_fild01",
+    "mobId": 1002,
+    "count": 8,
+    "respawnMs": 8000
+  },
+  {
+    "map": "prt_fild01",
+    "mobId": 1007,
+    "count": 8,
+    "respawnMs": 8000
+  }
+]

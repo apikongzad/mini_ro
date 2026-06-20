@@ -148,3 +148,16 @@ Thumbs.db
 
 # visual studio
 /.vs/
+
+# ---------------------------------------------------------------------------
+# mini-ro web game (web/, tools/, packages/) — Node/Next workspace
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+.turbo/
+.vercel/
+*.tsbuildinfo
+web/out/
+tools/**/dist/
+packages/**/dist/
+.env*.local

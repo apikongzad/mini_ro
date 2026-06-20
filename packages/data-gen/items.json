@@ -1,0 +1,260 @@
+{
+  "501": {
+    "id": 501,
+    "aegisName": "Red_Potion",
+    "name": "Red Potion",
+    "type": "IT_HEALING",
+    "buy": 50,
+    "weight": 70,
+    "effect": {
+      "kind": "heal",
+      "min": 45,
+      "max": 65
+    }
+  },
+  "502": {
+    "id": 502,
+    "aegisName": "Orange_Potion",
+    "name": "Orange Potion",
+    "type": "IT_HEALING",
+    "buy": 200,
+    "weight": 100,
+    "effect": {
+      "kind": "heal",
+      "min": 105,
+      "max": 145
+    }
+  },
+  "503": {
+    "id": 503,
+    "aegisName": "Yellow_Potion",
+    "name": "Yellow Potion",
+    "type": "IT_HEALING",
+    "buy": 550,
+    "weight": 130,
+    "effect": {
+      "kind": "heal",
+      "min": 175,
+      "max": 235
+    }
+  },
+  "504": {
+    "id": 504,
+    "aegisName": "White_Potion",
+    "name": "White Potion",
+    "type": "IT_HEALING",
+    "buy": 1200,
+    "weight": 150,
+    "effect": {
+      "kind": "heal",
+      "min": 325,
+      "max": 405
+    }
+  },
+  "505": {
+    "id": 505,
+    "aegisName": "Blue_Potion",
+    "name": "Blue Potion",
+    "type": "IT_HEALING",
+    "buy": 5000,
+    "weight": 150,
+    "effect": {
+      "kind": "healSp",
+      "min": 40,
+      "max": 60
+    }
+  },
+  "507": {
+    "id": 507,
+    "aegisName": "Red_Herb",
+    "name": "Red Herb",
+    "type": "IT_HEALING",
+    "buy": 18,
+    "weight": 30,
+    "effect": null
+  },
+  "511": {
+    "id": 511,
+    "aegisName": "Green_Herb",
+    "name": "Green Herb",
+    "type": "IT_HEALING",
+    "buy": 10,
+    "weight": 30,
+    "effect": null
+  },
+  "512": {
+    "id": 512,
+    "aegisName": "Apple",
+    "name": "Apple",
+    "type": "IT_HEALING",
+    "buy": 15,
+    "weight": 20,
+    "effect": null
+  },
+  "515": {
+    "id": 515,
+    "aegisName": "Carrot",
+    "name": "Carrot",
+    "type": "IT_HEALING",
+    "buy": 15,
+    "weight": 20,
+    "effect": null
+  },
+  "619": {
+    "id": 619,
+    "aegisName": "Unripe_Apple",
+    "name": "Unripe Apple",
+    "type": "IT_USABLE",
+    "buy": 1000,
+    "weight": 50,
+    "effect": null
+  },
+  "622": {
+    "id": 622,
+    "aegisName": "Rainbow_Carrot",
+    "name": "Rainbow Carrot",
+    "type": "IT_USABLE",
+    "buy": 2500,
+    "weight": 50,
+    "effect": null
+  },
+  "705": {
+    "id": 705,
+    "aegisName": "Clover",
+    "name": "Clover",
+    "type": "IT_ETC",
+    "buy": 10,
+    "weight": 10,
+    "effect": null
+  },
+  "713": {
+    "id": 713,
+    "aegisName": "Empty_Bottle",
+    "name": "Empty Bottle",
+    "type": "IT_ETC",
+    "buy": 6,
+    "weight": 20,
+    "effect": null
+  },
+  "721": {
+    "id": 721,
+    "aegisName": "Azure_Jewel",
+    "name": "Emerald",
+    "type": "IT_ETC",
+    "buy": 6000,
+    "weight": 100,
+    "effect": null
+  },
+  "909": {
+    "id": 909,
+    "aegisName": "Jellopy",
+    "name": "Jellopy",
+    "type": "IT_ETC",
+    "buy": 6,
+    "weight": 10,
+    "effect": null
+  },
+  "914": {
+    "id": 914,
+    "aegisName": "Fluff",
+    "name": "Fluff",
+    "type": "IT_ETC",
+    "buy": 8,
+    "weight": 10,
+    "effect": null
+  },
+  "938": {
+    "id": 938,
+    "aegisName": "Sticky_Mucus",
+    "name": "Sticky Mucus",
+    "type": "IT_ETC",
+    "buy": 70,
+    "weight": 10,
+    "effect": null
+  },
+  "949": {
+    "id": 949,
+    "aegisName": "Feather",
+    "name": "Feather",
+    "type": "IT_ETC",
+    "buy": 20,
+    "weight": 10,
+    "effect": null
+  },
+  "1201": {
+    "id": 1201,
+    "aegisName": "Knife",
+    "name": "Knife",
+    "type": "IT_WEAPON",
+    "buy": 50,
+    "weight": 400,
+    "atk": 17,
+    "effect": null
+  },
+  "1202": {
+    "id": 1202,
+    "aegisName": "Knife_",
+    "name": "Knife",
+    "type": "IT_WEAPON",
+    "buy": 50,
+    "weight": 400,
+    "atk": 17,
+    "effect": null
+  },
+  "1501": {
+    "id": 1501,
+    "aegisName": "Club",
+    "name": "Club",
+    "type": "IT_WEAPON",
+    "buy": 120,
+    "weight": 700,
+    "atk": 23,
+    "effect": null
+  },
+  "1502": {
+    "id": 1502,
+    "aegisName": "Club_",
+    "name": "Club",
+    "type": "IT_WEAPON",
+    "buy": 120,
+    "weight": 700,
+    "atk": 23,
+    "effect": null
+  },
+  "2262": {
+    "id": 2262,
+    "aegisName": "Pierrot_Nose",
+    "name": "Clown Nose",
+    "type": "IT_ARMOR",
+    "buy": 20,
+    "weight": 100,
+    "effect": null
+  },
+  "4001": {
+    "id": 4001,
+    "aegisName": "Poring_Card",
+    "name": "Poring Card",
+    "type": "IT_CARD",
+    "buy": 20,
+    "weight": 10,
+    "effect": null
+  },
+  "4002": {
+    "id": 4002,
+    "aegisName": "Fabre_Card",
+    "name": "Fabre Card",
+    "type": "IT_CARD",
+    "buy": 20,
+    "weight": 10,
+    "effect": null
+  },
+  "4006": {
+    "id": 4006,
+    "aegisName": "Lunatic_Card",
+    "name": "Lunatic Card",
+    "type": "IT_CARD",
+    "buy": 20,
+    "weight": 10,
+    "effect": null
+  }
+}
