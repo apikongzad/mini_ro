@@ -1,0 +1,50 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  background: #0c0f0a;
+  color: #e6e6da;
+}
+
+/* ---- landing ---- */
+.landing { max-width: 620px; margin: 8vh auto; padding: 0 20px; text-align: center; }
+.landing h1 { font-size: 3rem; letter-spacing: 2px; margin: 0 0 8px; }
+.landing .tag { color: #b7c2a6; line-height: 1.5; }
+.landing form { display: flex; gap: 8px; justify-content: center; margin: 24px 0; }
+.landing input {
+  padding: 10px 14px; font-size: 1rem; border-radius: 8px;
+  border: 1px solid #3a4a28; background: #161c10; color: #fff;
+}
+.landing button, .hud button {
+  padding: 10px 16px; font-size: .95rem; border-radius: 8px; cursor: pointer;
+  border: 1px solid #4a6a2a; background: #2c4218; color: #eaffd0;
+}
+.landing button:hover { background: #38561f; }
+.landing .fine { color: #7e8a6c; font-size: .8rem; margin-top: 28px; }
+
+/* ---- game ---- */
+.game { display: flex; gap: 16px; padding: 16px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+.board { background: #11150f; border: 2px solid #2c3a1c; border-radius: 8px; image-rendering: pixelated; cursor: crosshair; }
+
+.hud { width: 300px; background: #141a0f; border: 1px solid #2c3a1c; border-radius: 8px; padding: 14px; }
+.hud .row { margin: 6px 0; }
+.hud .title { font-weight: 700; font-size: 1.05rem; }
+.hud .sub { margin-top: 12px; color: #9fb088; font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+.bar { display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: 8px; margin: 4px 0; font-size: .8rem; }
+.barlabel { color: #9fb088; }
+.bartrack { background: #0b0e08; border-radius: 6px; height: 12px; overflow: hidden; }
+.barfill { display: block; height: 100%; transition: width .15s; }
+.barval { color: #cdd6bb; font-variant-numeric: tabular-nums; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.stats button { padding: 6px; font-size: .8rem; }
+.hud button:disabled { opacity: .4; cursor: not-allowed; }
+
+.inv { display: flex; flex-direction: column; gap: 6px; }
+.inv button { text-align: left; }
+.respawn { width: 100%; margin-top: 10px; background: #5a2222; border-color: #8a3a3a; }
+
+.help { margin-top: 12px; font-size: .78rem; color: #9fb088; line-height: 1.4; }
+.log { margin-top: 10px; font-size: .8rem; color: #d9e4c6; min-height: 60px; }
+.log div { padding: 2px 0; border-top: 1px solid #1e2814; }

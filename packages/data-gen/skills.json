@@ -1,0 +1,31 @@
+{
+  "5": {
+    "id": 5,
+    "name": "SM_BASH",
+    "maxLevel": 10,
+    "range": -1,
+    "attackType": "Weapon",
+    "spCost": [
+      8,
+      8,
+      8,
+      8,
+      8,
+      15,
+      15,
+      15,
+      15,
+      15
+    ]
+  },
+  "142": {
+    "id": 142,
+    "name": "NV_FIRSTAID",
+    "maxLevel": 1,
+    "range": 1,
+    "attackType": "Weapon",
+    "spCost": [
+      3
+    ]
+  }
+}

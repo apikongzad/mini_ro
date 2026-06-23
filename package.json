@@ -1,0 +1,20 @@
+{
+  "name": "mini-ro-web",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Web-based, small-scale RO-like game (educational). Uses Hercules db/ as a data source only.",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "extract": "pnpm --filter @mini-ro/data-extract run build",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck",
+    "dev": "pnpm --filter @mini-ro/web run dev",
+    "build:web": "pnpm --filter @mini-ro/web run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
