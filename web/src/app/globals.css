@@ -21,6 +21,11 @@ body {
 }
 .landing button:hover { background: #38561f; }
 .landing .fine { color: #7e8a6c; font-size: .8rem; margin-top: 28px; }
+.menu { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.menu .join { display: flex; gap: 8px; }
+.menu .secondary { background: #21301a; border-color: #3a4a28; }
+.status { margin-top: 8px; color: #e0c060; font-size: .85rem; text-align: center; }
+.roomcode { margin-top: 8px; color: #9fb088; font-size: .85rem; text-align: center; }
 
 /* ---- game ---- */
 .game { display: flex; gap: 16px; padding: 16px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }

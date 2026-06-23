@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "rooms": {
+      "$room": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "presence": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "chat": {
+          "$msg": {
+            ".validate": "newData.child('text').isString() && newData.child('text').val().length <= 300"
+          }
+        }
+      }
+    }
+  }
+}

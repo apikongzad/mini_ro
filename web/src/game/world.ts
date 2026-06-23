@@ -68,6 +68,23 @@ export interface GroundDrop {
   id: string; itemId: number; qty: number; x: number; y: number; expireAt: number;
 }
 
+/**
+ * Network role. `solo` = local single-player authority (Phase 1 behaviour).
+ * `host` = this client owns mob simulation for the room. `client` = mobs/remote
+ * players are read-only snapshots; only the local player is simulated here.
+ */
+export type Role = "solo" | "host" | "client";
+
+/**
+ * Cross-client intents exchanged via the net layer. The engine fills `outbox`
+ * and consumes `inbox`; the net layer (web/src/net) does the transport. Keeping
+ * Firebase out of the engine preserves headless testability.
+ */
+export type NetIntent =
+  | { kind: "hitMob"; srcUid: string; mobInstId: string; dmg: number }
+  | { kind: "hitPlayer"; dstUid: string; dmg: number }
+  | { kind: "expGrant"; dstUid: string; base: number; job: number };
+
 export interface World {
   data: GameData;
   map: GridMap;
@@ -79,6 +96,10 @@ export interface World {
   events: GameEvent[];
   townSpawn: Cell;
   private_seq: number;
+  role: Role;
+  localUid: string | null;
+  outbox: NetIntent[];
+  inbox: NetIntent[];
 }
 
 export function createWorld(data: GameData, map: GridMap, seed = 12345): World {
@@ -89,9 +110,17 @@ export function createWorld(data: GameData, map: GridMap, seed = 12345): World {
     rng, events: [],
     townSpawn: randomWalkable(map, rng.next),
     private_seq: 0,
+    role: "solo", localUid: null,
+    outbox: [], inbox: [],
   };
   spawnAllMobs(world);
   return world;
+}
+
+/** Switch the world into a networked role (called by the net layer on join). */
+export function configureNet(world: World, role: Role, localUid: string): void {
+  world.role = role;
+  world.localUid = localUid;
 }
 
 function uid(world: World, prefix: string): string {
@@ -194,7 +223,7 @@ export function playerBash(world: World, playerUid: string): boolean {
   if (world.now < p.attackReadyAt) return false;
   p.sp -= BASH_SP_LV1;
   const dmg = bashDamage(playerAtk(world, p), mobDef(world, m).def, p.bashLv, world.rng);
-  applyDamageToMob(world, m, dmg, p.uid);
+  dealMobDamage(world, p.uid, m, dmg);
   p.attackReadyAt = world.now + S.attackIntervalMs(p.stats.agi, p.stats.dex);
   return true;
 }
@@ -271,6 +300,20 @@ function consumeItem(p: PlayerEntity, itemId: number, qty: number): void {
 // ---------------------------------------------------------------------------
 // Damage / death
 // ---------------------------------------------------------------------------
+
+/**
+ * Route a player's hit on a mob. Solo/host apply it directly (host is the single
+ * writer of mob HP, so there is no double-damage). A client instead emits an
+ * intent for the host to apply.
+ */
+function dealMobDamage(world: World, attackerUid: string, m: MobEntity, dmg: number): void {
+  if (world.role === "client") {
+    world.outbox.push({ kind: "hitMob", srcUid: attackerUid, mobInstId: m.instId, dmg });
+  } else {
+    applyDamageToMob(world, m, dmg, attackerUid);
+  }
+}
+
 function applyDamageToMob(world: World, m: MobEntity, dmg: number, attackerUid: string): void {
   m.hp -= dmg;
   m.lastAttackerUid = attackerUid;
@@ -298,8 +341,15 @@ function killMob(world: World, m: MobEntity): void {
     }
   }
   // exp to the killer
-  const killer = m.lastAttackerUid ? world.players.get(m.lastAttackerUid) : null;
-  if (killer) grantExp(world, killer, def.exp, def.jexp);
+  const killerUid = m.lastAttackerUid;
+  if (!killerUid) return;
+  if (world.role === "solo" || killerUid === world.localUid) {
+    const killer = world.players.get(killerUid);
+    if (killer) grantExp(world, killer, def.exp, def.jexp);
+  } else {
+    // host -> remote killer: deliver exp so that client applies it to its own player
+    world.outbox.push({ kind: "expGrant", dstUid: killerUid, base: def.exp, job: def.jexp });
+  }
 }
 
 function grantExp(world: World, p: PlayerEntity, baseGain: number, jobGain: number): void {
@@ -347,13 +397,63 @@ export function step(world: World, dtMs: number): GameEvent[] {
   world.now += dtMs;
   world.events = [];
 
-  for (const m of world.mobs.values()) stepMob(world, m);
-  for (const p of world.players.values()) stepPlayer(world, p);
+  processInbox(world);
+
+  // Host & solo simulate mobs; clients render mob snapshots from the net layer.
+  if (world.role !== "client") {
+    for (const m of world.mobs.values()) stepMob(world, m);
+  }
+
+  // Solo steps every player; networked roles only simulate the local player
+  // (remote players own themselves and arrive as snapshots).
+  if (world.role === "solo") {
+    for (const p of world.players.values()) stepPlayer(world, p);
+  } else if (world.localUid) {
+    const me = world.players.get(world.localUid);
+    if (me) stepPlayer(world, me);
+  }
 
   // expire ground items
   world.ground = world.ground.filter((g) => g.expireAt > world.now);
 
   return world.events;
+}
+
+/** Apply intents delivered by the net layer, routed by the local role. */
+function processInbox(world: World): void {
+  if (world.inbox.length === 0) return;
+  const me = world.localUid ? world.players.get(world.localUid) : null;
+  for (const it of world.inbox) {
+    if (it.kind === "hitMob") {
+      // only the host owns mob HP
+      if (world.role !== "host") continue;
+      const m = world.mobs.get(it.mobInstId);
+      if (m && m.state !== "dead") applyDamageToMob(world, m, it.dmg, it.srcUid);
+    } else if (it.kind === "hitPlayer") {
+      if (me && it.dstUid === world.localUid && me.state === "alive") {
+        applyDamageToPlayer(world, me, it.dmg);
+      }
+    } else if (it.kind === "expGrant") {
+      if (me && it.dstUid === world.localUid) grantExp(world, me, it.base, it.job);
+    }
+  }
+  world.inbox.length = 0;
+}
+
+/** Drain queued outbound intents (called by the net layer each tick). */
+export function drainOutbox(world: World): NetIntent[] {
+  if (world.outbox.length === 0) return [];
+  const out = world.outbox.slice();
+  world.outbox.length = 0;
+  return out;
+}
+
+/** Add an item to a player's inventory (used by net-layer ground pickups). */
+export function addToInventory(world: World, playerUid: string, itemId: number, qty: number): void {
+  const p = world.players.get(playerUid);
+  if (!p) return;
+  p.inventory[itemId] = (p.inventory[itemId] ?? 0) + qty;
+  world.events.push({ type: "pickup", uid: playerUid, itemId, qty });
 }
 
 function nearestPlayer(world: World, m: MobEntity, range: number): PlayerEntity | null {
@@ -414,8 +514,16 @@ function stepMob(world: World, m: MobEntity): void {
         S.flee(target.baseLv, target.stats.agi),
         world.rng,
       );
-      if (res.hit) applyDamageToPlayer(world, target, res.damage);
-      else world.events.push({ type: "miss", x: target.x, y: target.y, onPlayer: true });
+      if (res.hit) {
+        if (world.role === "solo" || target.uid === world.localUid) {
+          applyDamageToPlayer(world, target, res.damage);
+        } else {
+          // host -> remote player: that client applies the damage to its own HP
+          world.outbox.push({ kind: "hitPlayer", dstUid: target.uid, dmg: res.damage });
+        }
+      } else {
+        world.events.push({ type: "miss", x: target.x, y: target.y, onPlayer: true });
+      }
       m.attackReadyAt = world.now + def.aspd;
     }
   } else if (world.now >= m.moveReadyAt) {
@@ -448,7 +556,7 @@ function stepPlayer(world: World, p: PlayerEntity): void {
             S.flee(mobDef(world, m).lv, mobDef(world, m).stats.agi),
             world.rng,
           );
-          if (res.hit) applyDamageToMob(world, m, res.damage, p.uid);
+          if (res.hit) dealMobDamage(world, p.uid, m, res.damage);
           else world.events.push({ type: "miss", x: m.x, y: m.y, onPlayer: false });
           p.attackReadyAt = world.now + S.attackIntervalMs(p.stats.agi, p.stats.dex);
         }
@@ -468,13 +576,17 @@ function stepPlayer(world: World, p: PlayerEntity): void {
     if (p.path.length === 0) p.intent = "idle";
   }
 
-  // auto-pickup ground items on/near the player
-  for (let i = world.ground.length - 1; i >= 0; i--) {
-    const g = world.ground[i]!;
-    if (cellDistance(p.x, p.y, g.x, g.y) <= PICKUP_RANGE) {
-      p.inventory[g.itemId] = (p.inventory[g.itemId] ?? 0) + g.qty;
-      world.events.push({ type: "pickup", uid: p.uid, itemId: g.itemId, qty: g.qty });
-      world.ground.splice(i, 1);
+  // auto-pickup ground items on/near the player. In networked rooms the net
+  // layer claims ground via an RTDB transaction (avoids double-pickup races),
+  // so the engine only auto-picks in solo mode.
+  if (world.role === "solo") {
+    for (let i = world.ground.length - 1; i >= 0; i--) {
+      const g = world.ground[i]!;
+      if (cellDistance(p.x, p.y, g.x, g.y) <= PICKUP_RANGE) {
+        p.inventory[g.itemId] = (p.inventory[g.itemId] ?? 0) + g.qty;
+        world.events.push({ type: "pickup", uid: p.uid, itemId: g.itemId, qty: g.qty });
+        world.ground.splice(i, 1);
+      }
     }
   }
 }
