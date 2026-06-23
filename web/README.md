@@ -43,9 +43,44 @@ Controls: click ground to move, click a monster to attack, **1** = Bash,
 - `src/ui/` — React HUD + input wiring (`GameClient.tsx`).
 - `src/app/` — Next.js App Router pages.
 
+## Multiplayer (Phase 2)
+
+Rooms run on **Firebase Realtime Database** with **anonymous auth**. One client
+is elected **host** (lowest uid, via an RTDB transaction) and authoritatively
+simulates all monsters; every client owns its own player. Player→monster hits
+flow as intents that only the host applies (single writer ⇒ no double damage);
+the host sends EXP back to the killer. With no Firebase env set, the app simply
+runs offline single-player.
+
+### Configure
+
+Copy `.env.local.example` → `.env.local` and fill in your Firebase web config
+(`NEXT_PUBLIC_FIREBASE_*`). Then `pnpm dev`, create a room, and share the 5-char
+code (or the `/play/CODE` URL) with friends.
+
+### Local end-to-end test with the emulator (no real project needed)
+
+```bash
+npm i -g firebase-tools
+cd web
+firebase emulators:start            # auth :9099, RTDB :9000, UI :4000
+```
+
+In `.env.local` set any non-empty `NEXT_PUBLIC_FIREBASE_PROJECT_ID` and
+`NEXT_PUBLIC_FIREBASE_DATABASE_URL`, plus `NEXT_PUBLIC_FIREBASE_EMULATOR=1`, then
+`pnpm dev`. Open two browser tabs in one room and verify: no double-damage on a
+shared monster, EXP goes to the killer, host fail-over when the host tab closes,
+and shared ground drops.
+
+## Deploy (Vercel)
+
+- Import the repo; set **Root Directory = `web/`** (pnpm workspace is detected).
+- Build command `pnpm --filter @mini-ro/web build` (default works too).
+- Add the `NEXT_PUBLIC_FIREBASE_*` env vars.
+- Deploy the RTDB security rules from `web/firebase/database.rules.json`
+  (`firebase deploy --only database`).
+
 ## Roadmap
 
-- **Phase 2** — multiplayer over Firebase Realtime Database (room codes,
-  anonymous auth, host-authority mob simulation). Add `NEXT_PUBLIC_FIREBASE_*`
-  env vars and deploy on Vercel (root directory = `web/`).
-- **Phase 3** — polish: PixiJS renderer, art/sound pass, mobile layout.
+- **Phase 3** — polish: PixiJS renderer, art/sound pass, chat UI, mobile layout,
+  remote-position interpolation tuning.
